@@ -18,6 +18,14 @@ async function bootstrap() {
     .setDescription('The Nest API MongoDb Template API description')
     .setVersion('1.0')
     .addTag('Nest API MongoDb Template')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'Authorization',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
 

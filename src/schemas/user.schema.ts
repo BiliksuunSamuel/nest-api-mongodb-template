@@ -1,7 +1,8 @@
-import { Prop } from '@nestjs/mongoose';
+import { Prop, Schema } from '@nestjs/mongoose';
 import { BaseSchema } from '.';
 import { ApiProperty } from '@nestjs/swagger';
 
+@Schema()
 export class User extends BaseSchema {
   @Prop()
   @ApiProperty()

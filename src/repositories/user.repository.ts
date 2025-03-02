@@ -12,6 +12,13 @@ export class UserRepository {
     @InjectModel(User.name) private readonly userRepository: Model<User>,
   ) {}
 
+  //update user by query
+  async updateAsync(query: any, request: User): Promise<User> {
+    return await this.userRepository
+      .findOneAndUpdate(query, { $set: request }, { new: true })
+      .lean();
+  }
+
   //get by id
   async getById(id: string): Promise<User> {
     return await this.userRepository.findOne({ id }).lean();
