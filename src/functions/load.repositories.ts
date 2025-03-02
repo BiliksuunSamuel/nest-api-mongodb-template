@@ -22,3 +22,11 @@ readdirSync(repositoriesPath).forEach((file) => {
 
 logger.debug(`✅  Registered ${repositories.length} repositories`);
 export default repositories;
+
+/*
+The load.repositories.ts file is responsible for loading all the repositories in the repositories directory.
+ensure that the repositories directory exists and contains at least one repository file.
+naming convention for the repository files is to use the name of the repository as the file name.
+For example, a repository named UserRepository should be saved in a file named user.repository.ts
+nb: All your repositories should prefix with .repository.ts
+*/

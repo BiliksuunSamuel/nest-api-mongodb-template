@@ -23,3 +23,11 @@ readdirSync(servicesPath).forEach((file) => {
 logger.debug(`✅ Registered ${services.length} services`);
 
 export default services;
+
+/*
+The load.services.ts file is responsible for loading all the services in the services directory.
+ensure that the services directory exists and contains at least one service file.
+naming convention for the service files is to use the name of the service as the file name.
+For example, a service named UserService should be saved in a file named user.service.ts
+nb:All your services should prefix with .service.ts
+*/

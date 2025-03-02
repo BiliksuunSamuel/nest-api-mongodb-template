@@ -24,3 +24,12 @@ readdirSync(controllersPath).forEach((file) => {
 logger.debug(`✅  Registered ${controllers.length} controllers`);
 
 export default controllers;
+
+/*
+
+The load.controllers.ts file is responsible for loading all the controllers in the controllers directory.
+ensure that the controllers directory exists and contains at least one controller file.
+naming convention for the controller files is to use the name of the controller as the file name.
+For example, a controller named UsersController should be saved in a file named users.controller.ts
+nb: All your controllers should prefic with .controller.ts
+*/

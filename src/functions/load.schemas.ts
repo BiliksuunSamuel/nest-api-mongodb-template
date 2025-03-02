@@ -41,3 +41,11 @@ export function loadSchemas(): { name: string; schema: any }[] {
   logger.debug(`Loaded ${schemas.length} schemas`);
   return schemas;
 }
+
+/*
+The load.schemas.ts file is responsible for loading all the schemas in the schemas directory.
+ensure that the schemas directory exists and contains at least one schema file.
+naming convention for the schema files is to use the name of the schema as the file name.
+For example, a schema named UserSchema should be saved in a file named user.schema.ts
+nb: All your schemas should prefic with .schema.ts
+*/
