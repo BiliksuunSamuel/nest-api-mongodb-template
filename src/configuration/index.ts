@@ -4,4 +4,5 @@ dotenv.config();
 
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
+  connectionString: process.env.CONNECTION_STRING,
 });
