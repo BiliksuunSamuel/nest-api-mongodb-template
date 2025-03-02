@@ -22,7 +22,7 @@ It’s designed to help developers **kickstart a new NestJS project** with best 
 - Nodejs
 
 - Mongodb server, you can setup your local mongodb server by following:
-  <a href="https://www.mongodb.com/try/download/community">https://www.mongodb.com/try/download/community</a>
+  <a href="https://www.mongodb.com/try/download/community" target="_blank">https://www.mongodb.com/try/download/community</a>
 
 ---
 
@@ -32,7 +32,7 @@ Create a .env file at the root of your project and add your environment variable
 
 ```code
 PORT=5858
-CONNECTION_STRING=mongodb://localhost:27017/nestjs-template
+CONNECTION_STRING=mongodb://localhost:27017/NestjsTemplate
 JWT_SECRET=your-secret-key
 
 
