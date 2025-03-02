@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Param, Patch, Post, Res } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CustomerRequest } from 'src/dtos/customer/customer.request.dto';
 import { CustomerService } from 'src/services/customer.service';
 
 @Controller('api/customers')
+@ApiTags('Customers')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
