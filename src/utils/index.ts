@@ -27,3 +27,15 @@ export async function comparePassword(
 ): Promise<boolean> {
   return await bcrypt.compare(password, hash);
 }
+
+export function toPaginationInfo(object: any): {
+  page: number;
+  pageSize: number;
+} {
+  const page = object?.page;
+  const pageSize = object?.pageSize;
+  return {
+    page: !isNaN(page) ? parseInt(page) : 1,
+    pageSize: !isNaN(pageSize) ? parseInt(pageSize) : 10,
+  };
+}

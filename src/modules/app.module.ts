@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../configuration';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,6 +10,7 @@ import { JwtStrategy } from 'src/providers/jwt.strategy';
 import { LocalStrategy } from 'src/providers/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import constants from 'src/constants';
+import { AuthMiddleware } from 'src/middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -29,4 +30,19 @@ import constants from 'src/constants';
   controllers: [...controllers],
   providers: [...repositories, ...services, LocalStrategy, JwtStrategy],
 })
-export class AppModule {}
+export class AppModule {
+  //configure middleware to check for authentication
+  //you can include and exclude routes as you wish
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: 'api/authentication/sign-in', method: RequestMethod.POST },
+        { path: 'api/authentication/sign-up', method: RequestMethod.POST },
+      )
+      .forRoutes({
+        path: '*',
+        method: RequestMethod.ALL,
+      });
+  }
+}
