@@ -22,7 +22,9 @@ It’s designed to help developers **kickstart a new NestJS project** with best 
 - Nodejs
 
 - Mongodb server, you can setup your local mongodb server by following:
-  <a href="https://www.mongodb.com/try/download/community" target="_blank">https://www.mongodb.com/try/download/community</a>
+  <a href="https://www.mongodb.com/try/download/community" target="_blank" rel="noopener noreferrer">
+  Download MongoDB Community Edition
+  </a>
 
 ---
 
