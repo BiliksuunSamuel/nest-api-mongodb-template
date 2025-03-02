@@ -12,17 +12,40 @@ It’s designed to help developers **kickstart a new NestJS project** with best 
 ✅ **Authentication** – Supports **JWT-based authentication**  
 ✅ **Swagger API Documentation** – Auto-generates OpenAPI docs  
 ✅ **Auto-load Modules** – Dynamically loads controllers, services, repositories, and schemas  
-✅ **Docker Support** – Run the app inside a container  
 ✅ **Environment Variables** – Uses `.env` for configuration  
 ✅ **Clean Project Structure** – Easy to scale and maintain
 
 ---
 
-## 📦 Installation
+## ⚡ Requirements
 
-### **1️⃣ Clone the Repository**
+- Nodejs
+
+- Mongodb server, you can setup your local mongodb server by following:
+  <a href="https://www.mongodb.com/try/download/community">https://www.mongodb.com/try/download/community</a>
+
+---
+
+## 🌍 Environment Variables (.env.example)
+
+Create a .env file at the root of your project and add your environment variables:
+
+```code
+PORT=5858
+CONNECTION_STRING=mongodb://localhost:27017/nestjs-template
+JWT_SECRET=your-secret-key
+
+
+```
+
+## 🚀 How to Use This Template
+
+### 1️⃣ Create a New Project from This Template
+
+Run the following command:
 
 ```sh
-git clone https://github.com/your-username/nestjs-mongodb-boilerplate.git
-cd nestjs-mongodb-boilerplate
+npx degit BiliksuunSamuel/nest-api-mongodb-template my-new-app
+cd my-new-app
+npm install
 ```
