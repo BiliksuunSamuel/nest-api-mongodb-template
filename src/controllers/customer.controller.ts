@@ -1,7 +1,19 @@
-import { Body, Controller, Get, Param, Patch, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CustomerRequest } from 'src/dtos/customer/customer.request.dto';
+import { UserRole } from 'src/enums';
+import { AuthRoles } from 'src/middlewares/auth.roles';
+import { JwtAuthGuard } from 'src/providers/jwt-auth..guard';
 import { CustomerService } from 'src/services/customer.service';
 
 @Controller('api/customers')
@@ -13,6 +25,16 @@ export class CustomerController {
   @ApiParam({ name: 'id', type: String })
   async getById(@Param('id') id: string, @Res() response: Response) {
     const res = await this.customerService.getById(id);
+    response.status(res.code).send(res);
+  }
+  //delete customer : Example  using RBAC (Role-Based Access Control)
+  @Get('delete/:id')
+  @UseGuards(JwtAuthGuard)
+  //adding roles to allow only admin to delete customer
+  @AuthRoles(UserRole.Admin)
+  @ApiParam({ name: 'id', type: String })
+  async delete(@Param('id') id: string, @Res() response: Response) {
+    const res = await this.customerService.delete(id);
     response.status(res.code).send(res);
   }
 

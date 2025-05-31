@@ -1,6 +1,7 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { BaseSchema } from '.';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from 'src/enums';
 
 @Schema()
 export class User extends BaseSchema {
@@ -23,4 +24,8 @@ export class User extends BaseSchema {
   @Prop({ default: false })
   @ApiProperty()
   authenticated: boolean;
+
+  @Prop({ default: UserRole.Client })
+  @ApiProperty()
+  role: UserRole;
 }

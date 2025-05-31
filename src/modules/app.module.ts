@@ -11,6 +11,7 @@ import { LocalStrategy } from 'src/providers/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import constants from 'src/constants';
 import { AuthMiddleware } from 'src/middlewares/auth.middleware';
+import { RolesGuard } from 'src/providers/roles.guard';
 
 @Module({
   imports: [
@@ -28,7 +29,13 @@ import { AuthMiddleware } from 'src/middlewares/auth.middleware';
     }),
   ],
   controllers: [...controllers],
-  providers: [...repositories, ...services, LocalStrategy, JwtStrategy],
+  providers: [
+    ...repositories,
+    ...services,
+    LocalStrategy,
+    JwtStrategy,
+    RolesGuard,
+  ],
 })
 export class AppModule {
   //configure middleware to check for authentication
