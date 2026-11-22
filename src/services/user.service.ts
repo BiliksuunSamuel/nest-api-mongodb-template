@@ -50,6 +50,12 @@ export class UserService {
     request: CreateUserRequest,
   ): Promise<ApiResponseDto<UserResponse>> {
     try {
+      const existing = await this.userRepository.getByEmail(request.email);
+      if (existing) {
+        return CommonResponses.ConflictResponse<UserResponse>(
+          'A user with this email already exists',
+        );
+      }
       request.password = await hashPassword(request.password);
       const user = await this.userRepository.create(request);
       return CommonResponses.CreatedResponse<UserResponse>(

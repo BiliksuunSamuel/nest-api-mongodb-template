@@ -35,7 +35,9 @@ Create a .env file at the root of your project and add your environment variable
 ```code
 PORT=5858
 CONNECTION_STRING=mongodb://localhost:27017/NestjsTemplate
-JWT_SECRET=your-secret-key
+JWT_SECRET=your-secret-key   # required, app refuses to start without it
+JWT_EXPIRES_IN=8h            # optional
+CORS_ORIGIN=*                # optional, restrict in production
 
 
 ```
@@ -51,3 +53,21 @@ npx degit BiliksuunSamuel/nest-api-mongodb-template my-new-app
 cd my-new-app
 npm install
 ```
+
+
+---
+
+## 🐳 Docker
+
+```sh
+cp .env.example .env
+JWT_SECRET=$(openssl rand -hex 32) docker compose up --build
+```
+
+## 🔐 Auth & RBAC
+
+- `POST /api/authentication/login` returns a JWT. Send it as `Authorization: Bearer <token>`.
+- `POST /api/authentication/logout` revokes the token used for the request.
+- `JwtStrategy` rejects revoked tokens and attaches the user's current `role` to `request.user`.
+- Protect a route by role with `@AuthRoles(UserRole.Admin)` (it applies `JwtAuthGuard` + `RolesGuard`).
+- `POST /api/users/register` is public; other user/customer routes require a token.

@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
 import { LoginRequest } from 'src/dtos/auth/login.request.dto';
 import { UserJwtDetails } from 'src/dtos/auth/user.jwt.details';
 import { AuthUser } from 'src/extensions/auth.extensions';
@@ -14,16 +13,20 @@ export class AuthenticationController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() req: LoginRequest, @Res() response: Response) {
-    const res = await this.authService.login(req);
-    response.status(res.code).send(res);
+  async login(@Body() req: LoginRequest) {
+    return await this.authService.login(req);
   }
 
   //profile
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  async profile(@AuthUser() user: UserJwtDetails, @Res() response: Response) {
-    const res = await this.authService.getUserByEmail(user.email);
-    response.status(res.code).send(res);
+  async profile(@AuthUser() user: UserJwtDetails) {
+    return await this.authService.getUserByEmail(user.email);
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@AuthUser() user: UserJwtDetails) {
+    return await this.authService.logout(user);
   }
 }

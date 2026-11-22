@@ -1,12 +1,13 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import constants from 'src/constants';
 import { UserJwtDetails } from 'src/dtos/auth/user.jwt.details';
+import { UserRepository } from 'src/repositories/user.repository';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private readonly userRepository: UserRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -14,11 +15,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any): Promise<UserJwtDetails> {
+  // runs after the signature/expiry check; rejects revoked tokens and
+  // attaches the user's current role so RolesGuard can enforce RBAC
+  async validate(payload: UserJwtDetails): Promise<UserJwtDetails> {
+    const user = await this.userRepository.getById(payload.id);
+    if (!user || !user.tokenIds?.includes(payload.tokenId)) {
+      throw new UnauthorizedException();
+    }
     return {
-      id: payload.id,
-      email: payload?.email,
+      id: user.id,
+      email: user.email,
       tokenId: payload.tokenId,
+      role: user.role,
     };
   }
 }

@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    ports:
+      - '5858:5858'
+    environment:
+      PORT: 5858
+      CONNECTION_STRING: mongodb://mongo:27017/NestjsTemplate
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:

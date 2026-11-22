@@ -10,8 +10,8 @@ export function loadSchemas(): { name: string; schema: any }[] {
   const schemas = [];
 
   try {
-    const files = readdirSync(SCHEMA_FOLDER).filter((file) =>
-      file.endsWith('.schema.js'),
+    const files = readdirSync(SCHEMA_FOLDER).filter(
+      (file) => /\.schema\.(js|ts)$/.test(file) && !file.endsWith('.d.ts'),
     );
 
     for (const file of files) {

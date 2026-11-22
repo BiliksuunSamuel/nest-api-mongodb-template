@@ -9,7 +9,7 @@ export class User extends BaseSchema {
   @ApiProperty()
   name: string;
 
-  @Prop()
+  @Prop({ required: true, unique: true, lowercase: true, trim: true })
   @ApiProperty()
   email: string;
 

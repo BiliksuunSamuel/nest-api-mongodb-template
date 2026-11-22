@@ -26,7 +26,9 @@ export class UserRepository {
 
   //get by email
   async getByEmail(email: string): Promise<User> {
-    return await this.userRepository.findOne({ email }).lean();
+    return await this.userRepository
+      .findOne({ email: email?.trim().toLowerCase() })
+      .lean();
   }
 
   //create user

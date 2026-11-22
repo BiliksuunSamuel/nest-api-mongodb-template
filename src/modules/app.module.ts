@@ -25,7 +25,7 @@ import { RolesGuard } from 'src/providers/roles.guard';
     JwtModule.register({
       global: true,
       secret: constants().secret,
-      signOptions: { expiresIn: '8hrs' },
+      signOptions: { expiresIn: configuration().jwtExpiresIn },
     }),
   ],
   controllers: [...controllers],
@@ -38,18 +38,11 @@ import { RolesGuard } from 'src/providers/roles.guard';
   ],
 })
 export class AppModule {
-  //configure middleware to check for authentication
-  //you can include and exclude routes as you wish
+  // normalise pagination query params for every route
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude(
-        { path: 'api/authentication/sign-in', method: RequestMethod.POST },
-        { path: 'api/authentication/sign-up', method: RequestMethod.POST },
-      )
-      .forRoutes({
-        path: '*',
-        method: RequestMethod.ALL,
-      });
+    consumer.apply(AuthMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
   }
 }

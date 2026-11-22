@@ -47,6 +47,25 @@ export class AuthService {
     return await this.userRepository.getByEmail(username);
   }
 
+  // revoke the token used for this request
+  async logout(user: UserJwtDetails): Promise<ApiResponseDto<null>> {
+    try {
+      const current = await this.userRepository.getById(user.id);
+      if (current) {
+        await this.userRepository.updateAsync({ id: user.id }, {
+          tokenIds: current.tokenIds.filter((t) => t !== user.tokenId),
+        } as any);
+      }
+      return { code: HttpStatus.OK, message: 'Logged out' };
+    } catch (error) {
+      this.logger.error('an error occurred during logout', error, user.id);
+      return {
+        message: 'sorry,something went wrong',
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+
   async login(request: LoginRequest): Promise<ApiResponseDto<AuthResponse>> {
     try {
       let user = await this.userRepository.getByEmail(request.email);
@@ -70,7 +89,8 @@ export class AuthService {
 
       const authTokenId = generateId();
       user.updatedAt = new Date();
-      user.tokenIds = [...user.tokenIds, authTokenId];
+      // keep only the most recent sessions so the list cannot grow forever
+      user.tokenIds = [...user.tokenIds, authTokenId].slice(-5);
       user.updatedBy = user.email;
       user.updatedAt = new Date();
       const { _id, ...others } = user as any;

@@ -1,20 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app.module';
 import configuration from './configuration';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import * as bodyParser from 'body-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ApiResponseInterceptor } from './interceptors/api.response.interceptor';
 import { HttpExceptionFilter } from './middlewares/http.exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({ origin: '*' });
-  app.use(bodyParser.json({ limit: '100mb' }));
-  app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+  app.enableShutdownHooks();
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.enableCors({ origin: configuration().corsOrigin });
+  app.use(bodyParser.json({ limit: '1mb' }));
+  app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
 
   // global exception filter
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new ApiResponseInterceptor());
 
   //
   const config = new DocumentBuilder()
@@ -37,10 +40,8 @@ async function bootstrap() {
 
   //
 
-  await app.listen(configuration().port, () => {
-    console.log(
-      `Server is running on http://localhost:${configuration().port}`,
-    );
-  });
+  const port = configuration().port;
+  await app.listen(port);
+  new Logger('Bootstrap').log(`Server is running on http://localhost:${port}`);
 }
 bootstrap();
