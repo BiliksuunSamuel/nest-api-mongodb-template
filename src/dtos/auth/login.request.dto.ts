@@ -1,21 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  IsStrongPassword,
-} from 'class-validator';
+import { IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { CountryCode } from 'libphonenumber-js';
+import configuration from 'src/configuration';
 
 export class LoginRequest {
-  @ApiProperty()
-  @IsString()
-  @IsEmail()
+  @ApiProperty({
+    description:
+      'Phone number, international or local to DEFAULT_COUNTRY (e.g. 0241234567)',
+  })
   @IsNotEmpty()
-  email: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @IsStrongPassword()
-  password: string;
+  @IsPhoneNumber(configuration().defaultCountry as CountryCode)
+  phoneNumber: string;
 }

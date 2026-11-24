@@ -1,14 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class UserRequest {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
+  @MaxLength(100)
   name: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
 }

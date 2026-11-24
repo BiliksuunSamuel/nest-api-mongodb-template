@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ApiResponseDto } from 'src/dtos/common/api.response.dto';
-import { CreateUserRequest } from 'src/dtos/user/create.user.request.dto';
 import { UserRequest } from 'src/dtos/user/user.request.dto';
 import { UserResponse } from 'src/dtos/user/user.response.dto';
 import { CommonResponses } from 'src/helper/common.responses.helper';
 import { UserRepository } from 'src/repositories/user.repository';
-import { hashPassword, toUserResponse } from 'src/utils';
+import { toUserResponse } from 'src/utils';
+import { normalizePhoneNumber } from 'src/utils/phone';
 
 @Injectable()
 export class UserService {
@@ -29,42 +29,21 @@ export class UserService {
     }
   }
 
-  async getByEmail(email: string): Promise<ApiResponseDto<UserResponse>> {
+  async getByPhoneNumber(
+    phoneNumber: string,
+  ): Promise<ApiResponseDto<UserResponse>> {
     try {
-      const user = await this.userRepository.getByEmail(email);
+      const user = await this.userRepository.getByPhoneNumber(
+        normalizePhoneNumber(phoneNumber),
+      );
       if (!user) {
         return CommonResponses.NotFoundResponse<UserResponse>();
       }
       return CommonResponses.OkResponse<UserResponse>(toUserResponse(user));
     } catch (error) {
       this.logger.error(
-        'an error occurred while getting user by email',
-        email,
-        error,
-      );
-      return CommonResponses.InternalServerErrorResponse<UserResponse>();
-    }
-  }
-
-  async create(
-    request: CreateUserRequest,
-  ): Promise<ApiResponseDto<UserResponse>> {
-    try {
-      const existing = await this.userRepository.getByEmail(request.email);
-      if (existing) {
-        return CommonResponses.ConflictResponse<UserResponse>(
-          'A user with this email already exists',
-        );
-      }
-      request.password = await hashPassword(request.password);
-      const user = await this.userRepository.create(request);
-      return CommonResponses.CreatedResponse<UserResponse>(
-        toUserResponse(user),
-      );
-    } catch (error) {
-      this.logger.error(
-        'an error occurred while creating user',
-        request,
+        'an error occurred while getting user by phone number',
+        phoneNumber,
         error,
       );
       return CommonResponses.InternalServerErrorResponse<UserResponse>();

@@ -10,6 +10,11 @@ import { HttpExceptionFilter } from './middlewares/http.exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableShutdownHooks();
+  // behind a reverse proxy, use the real client IP (throttling, sessions)
+  (app.getHttpAdapter().getInstance() as any).set(
+    'trust proxy',
+    configuration().trustProxy,
+  );
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableCors({ origin: configuration().corsOrigin });
   app.use(bodyParser.json({ limit: '1mb' }));

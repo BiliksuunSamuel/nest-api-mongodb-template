@@ -12,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 import constants from 'src/constants';
 import { AuthMiddleware } from 'src/middlewares/auth.middleware';
 import { RolesGuard } from 'src/providers/roles.guard';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -27,6 +28,8 @@ import { RolesGuard } from 'src/providers/roles.guard';
       secret: constants().secret,
       signOptions: { expiresIn: configuration().jwtExpiresIn },
     }),
+    // per-IP limits; routes opt in with ThrottlerGuard + @Throttle
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
   ],
   controllers: [...controllers],
   providers: [
@@ -38,11 +41,12 @@ import { RolesGuard } from 'src/providers/roles.guard';
   ],
 })
 export class AppModule {
-  // normalise pagination query params for every route
+  // session check + request normalisation for every route except login, so a
+  // stale token never blocks signing in again
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes({
-      path: '*',
-      method: RequestMethod.ALL,
-    });
+    consumer
+      .apply(AuthMiddleware)
+      .exclude({ path: 'api/authentication/login', method: RequestMethod.POST })
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

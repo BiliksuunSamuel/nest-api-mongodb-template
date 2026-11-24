@@ -3,27 +3,18 @@ import { BaseSchema } from '.';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from 'src/enums';
 
+// The user's profile. Authentication state (tokens, OTP challenge) lives on the
+// separate UserAuthSession collection.
 @Schema()
 export class User extends BaseSchema {
-  @Prop()
+  @Prop({ default: null })
   @ApiProperty()
   name: string;
 
-  @Prop({ required: true, unique: true, lowercase: true, trim: true })
+  // E.164 digits without the "+" (see utils/phone.ts).
+  @Prop({ required: true, unique: true, trim: true })
   @ApiProperty()
-  email: string;
-
-  @Prop()
-  @ApiProperty()
-  password: string;
-
-  @Prop({ default: [] })
-  @ApiProperty()
-  tokenIds: string[];
-
-  @Prop({ default: false })
-  @ApiProperty()
-  authenticated: boolean;
+  phoneNumber: string;
 
   @Prop({ default: UserRole.Client })
   @ApiProperty()

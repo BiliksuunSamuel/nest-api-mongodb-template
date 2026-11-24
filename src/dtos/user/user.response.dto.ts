@@ -5,5 +5,9 @@ export class UserResponse extends BaseSchema {
   @ApiProperty()
   name: string;
   @ApiProperty()
-  email: string;
+  phoneNumber: string;
+  @ApiProperty()
+  role: string;
+  @ApiProperty()
+  authenticated: boolean;
 }

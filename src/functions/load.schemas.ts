@@ -26,10 +26,12 @@ export function loadSchemas(): { name: string; schema: any }[] {
           !key.toLowerCase().includes('schema')
         ) {
           logger.debug(`✅ Registering schema: ${key}`);
-          schemas.push({
-            name: key.replace('Schema', ''),
-            schema: SchemaFactory.createForClass(entity as Type<any>),
-          });
+          const schema = SchemaFactory.createForClass(entity as Type<any>);
+          // optional hook for indexes etc: export function configureSchema(schema)
+          if (typeof module.configureSchema === 'function') {
+            module.configureSchema(schema);
+          }
+          schemas.push({ name: key.replace('Schema', ''), schema });
         } else {
           logger.debug(`Skipping: ${key}`);
         }

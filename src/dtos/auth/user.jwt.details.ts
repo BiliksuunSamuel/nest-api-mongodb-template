@@ -1,6 +1,7 @@
 export class UserJwtDetails {
   id: string;
-  email: string;
+  phoneNumber: string;
   tokenId: string;
   role?: string;
+  name?: string;
 }
